@@ -44,6 +44,16 @@ class DoublyLinkedList {
     return removedNode
   }
 
+  unshift(value) {
+    if (this.length === 0) return this.push(value)
+    const newNode = new Node(value)
+    newNode.next = this.head
+    this.head.previous = newNode
+    this.head = newNode
+    this.length += 1
+    return this
+  }
+
   forEach(cb) {
     let current = this.head
     while (current) {
@@ -120,5 +130,33 @@ class Node {
 //     console.log('- removed node.next is null?', list.shift().next === null) // true
 //     console.log('- updates list.head?', list.head.value === 3)
 //     console.log('- list.head.previous is null?', list.head.previous === null) // true
+//   }
+// })()
+
+// ;(function unshiftDemo() {
+//   createsANewNodeAtTheHead()
+
+//   function printExampleTitle(title) {
+//     console.log('\n')
+//     console.log(`${title}:`)
+//     console.log('-'.repeat(title.length + 1))
+//   }
+
+//   function createsANewNodeAtTheHead() {
+//     printExampleTitle('Adds nodes to the beginning of the list')
+//     const list = new DoublyLinkedList()
+//     list.unshift('foo')
+//     console.log(
+//       '- updates tail and head when list is empty?',
+//       list.head.value === 'foo' && list.tail === list.head
+//     )
+//     list.unshift('bar').unshift('fizz')
+//     console.log('- can be chained (returns `this`)? true')
+//     console.log('- updates the length?', list.length === 3)
+//     console.log('- adds nodes at the head?', list.head.value === 'fizz')
+//     console.log(
+//       '- head points to the former head?',
+//       list.head.next.value === 'bar'
+//     )
 //   }
 // })()
