@@ -110,6 +110,21 @@ class DoublyLinkedList {
     return false
   }
 
+  remove(index) {
+    if (index === 0) return this.shift()
+    if (index === this.length - 1) return this.pop()
+    const removedNode = this.get(index)
+    if (removedNode) {
+      const { previous, next } = removedNode
+      removedNode.previous = null
+      removedNode.next = null
+      previous.next = next
+      next.previous = previous
+      this.length -= 1
+    }
+    return removedNode
+  }
+
   forEach(cb) {
     let current = this.head
     while (current) {
