@@ -86,6 +86,30 @@ class DoublyLinkedList {
     return false
   }
 
+  insert(index, value) {
+    if (index === 0) {
+      this.unshift(value)
+      return true
+    }
+    if (index === this.length) {
+      this.push(value)
+      return true
+    }
+    const nextNode = this.get(index)
+    if (nextNode) {
+      const newNode = new Node(value)
+      const prevNode = nextNode.previous
+      newNode.previous = prevNode
+      newNode.next = nextNode
+
+      prevNode.next = newNode
+      nextNode.previous = newNode
+      this.length += 1
+      return true
+    }
+    return false
+  }
+
   forEach(cb) {
     let current = this.head
     while (current) {
