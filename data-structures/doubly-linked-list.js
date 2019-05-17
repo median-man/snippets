@@ -77,6 +77,15 @@ class DoublyLinkedList {
     }
   }
 
+  set(index, value) {
+    const node = this.get(index)
+    if (node) {
+      node.value = value
+      return true
+    }
+    return false
+  }
+
   forEach(cb) {
     let current = this.head
     while (current) {
