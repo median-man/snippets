@@ -54,6 +54,29 @@ class DoublyLinkedList {
     return this
   }
 
+  get(index) {
+    const { head, tail, length } = this
+    if (index < 0 || index >= length) return null
+    const mid = length / 2
+    return index < mid ? searchFromHead() : searchFromTail()
+
+    function searchFromHead() {
+      let result = head
+      for (let i = 0; i < index; i += 1) {
+        result = result.next
+      }
+      return result
+    }
+
+    function searchFromTail() {
+      let result = tail
+      for (let i = length - 1; i > index; i -= 1) {
+        result = result.previous
+      }
+      return result
+    }
+  }
+
   forEach(cb) {
     let current = this.head
     while (current) {
@@ -158,5 +181,38 @@ class Node {
 //       '- head points to the former head?',
 //       list.head.next.value === 'bar'
 //     )
+//   }
+// })()
+
+// ;(function getDemo() {
+//   whenIndexIsOutOfBounds()
+//   returnsNodeAtGivenIndex()
+
+//   function printExampleTitle(title) {
+//     console.log('\n')
+//     console.log(`${title}:`)
+//     console.log('-'.repeat(title.length + 1))
+//   }
+
+//   function whenIndexIsOutOfBounds() {
+//     printExampleTitle('When the list is empty:')
+//     const list = new DoublyLinkedList()
+//     list.push('foo')
+//     console.log('- returns null when index < 0?', list.get(-1) === null)
+//     console.log('- returns null when index >= length?', list.get(1) === null)
+//   }
+
+//   function returnsNodeAtGivenIndex() {
+//     printExampleTitle('Returns the node at the given index:')
+//     const list = new DoublyLinkedList()
+//     list
+//       .push('foo')
+//       .push('bar')
+//       .push('baz')
+//     console.log(
+//       '- returns the head node when given 0?',
+//       list.head === list.get(0)
+//     )
+//     console.log('- returns node at index 2?', list.get(2).value === 'baz')
 //   }
 // })()
