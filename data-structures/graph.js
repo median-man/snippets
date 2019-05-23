@@ -52,6 +52,30 @@ class Graph {
     }
     return result
   }
+
+  bfTraverse(startVertex) {
+    const result = []
+    const visited = {}
+
+    const isNotVisited = node => !visited[node]
+
+    const visitNode = node => {
+      result.push(node)
+      visited[node] = true
+    }
+
+    const childrenOfNodes = nodes =>
+      nodes.reduce((acc, node) => acc.concat(this.adjacencyList[node]), [])
+
+    const traverse = nodes => {
+      if (!nodes.length) return
+      const unvisited = nodes.filter(isNotVisited)
+      unvisited.forEach(visitNode)
+      traverse(childrenOfNodes(unvisited))
+    }
+    traverse([startVertex])
+    return result
+  }
 }
 /* 
   Run with --test argument to run tests
@@ -80,6 +104,7 @@ if (process.argv.indexOf('--test') !== -1) {
   removeEdgeTests()
   removeVertexTests()
   dfTraverseTests()
+  bfTraverseTests()
 
   function runTest(description, test) {
     try {
@@ -296,14 +321,60 @@ if (process.argv.indexOf('--test') !== -1) {
       }
 
       runTest(description, test)
+    }
+  }
 
-      function shallowEquals(a, b) {
-        if (a.length !== b.length) return false
-        for (let i = 0; i < a.length; i += 1) {
-          if (a[i] !== b[i]) return false
-        }
-        return true
+  function bfTraverseTests() {
+    let graph
+
+    console.log('bfTraverse')
+    shouldReturnAnArray()
+    shouldReturnAllNodesInBreadthFirstOrder()
+    console.log('')
+
+    function setup() {
+      /* 
+        Creates a graph arranged as follows:
+
+          A — E  — D
+          |
+          B — C
+        
+        A breadth first traversal from A results in one of two orders:
+          - A B E C D
+          - A E B D C
+      */
+      graph = new Graph()
+      'ABCDE'.split('').forEach(graph.addVertex.bind(graph))
+      'A-B, A-E, B-C, E-D'
+        .split(', ')
+        .map(edge => edge.split('-'))
+        .forEach(edge => graph.addEdge(...edge))
+    }
+
+    function shouldReturnAnArray() {
+      const description = 'should return an array'
+
+      const test = () => {
+        setup()
+        const result = graph.bfTraverse('A')
+        console.assert(Array.isArray(result), 'Expected result to be an array')
       }
+      runTest(description, test)
+    }
+
+    function shouldReturnAllNodesInBreadthFirstOrder() {
+      const description = 'should return all nodes in breadth first order'
+
+      const test = () => {
+        setup()
+        const result = graph.bfTraverse('A')
+        console.assert(
+          result.join('') === 'ABECD',
+          `Expected A B E C D but got ${result.join(' ') || 'nothing'}`
+        )
+      }
+      runTest(description, test)
     }
   }
 }
