@@ -56,24 +56,17 @@ class Graph {
   bfTraverse(startVertex) {
     const result = []
     const visited = {}
+    const nodeQ = [startVertex]
+    let current
 
-    const isNotVisited = node => !visited[node]
-
-    const visitNode = node => {
-      result.push(node)
-      visited[node] = true
+    while (nodeQ.length) {
+      current = nodeQ.shift()
+      if (!visited[current]) {
+        visited[current] = true
+        result.push(current)
+        nodeQ.push(...this.adjacencyList[current])
+      }
     }
-
-    const childrenOfNodes = nodes =>
-      nodes.reduce((acc, node) => acc.concat(this.adjacencyList[node]), [])
-
-    const traverse = nodes => {
-      if (!nodes.length) return
-      const unvisited = nodes.filter(isNotVisited)
-      unvisited.forEach(visitNode)
-      traverse(childrenOfNodes(unvisited))
-    }
-    traverse([startVertex])
     return result
   }
 }
@@ -336,9 +329,7 @@ if (process.argv.indexOf('--test') !== -1) {
       /* 
         Creates a graph arranged as follows:
 
-          A — E  — D
-          |
-          B — C
+        C — B —  A — E  — D
         
         A breadth first traversal from A results in one of two orders:
           - A B E C D
