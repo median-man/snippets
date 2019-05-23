@@ -38,16 +38,18 @@ class Graph {
   }
 
   dfTraverse(startVertex) {
+    const toVisitStack = [startVertex]
     const result = []
     const visited = {}
-    const traverse = vertex => {
-      visited[vertex] = true
-      result.push(vertex)
-      this.adjacencyList[vertex].forEach(neighbor => {
-        if (!visited[neighbor]) traverse(neighbor)
-      })
+    let current
+    while (toVisitStack.length) {
+      current = toVisitStack.pop()
+      if (!visited[current]) {
+        visited[current] = true
+        result.push(current)
+        toVisitStack.push(...this.adjacencyList[current])
+      }
     }
-    traverse(startVertex)
     return result
   }
 }
@@ -268,7 +270,8 @@ if (process.argv.indexOf('--test') !== -1) {
            / \
           B — C — D
         
-        A depth first traversal from A produces A - B - C - D.
+        A depth first traversal from A produces A - B - C - D or A - C - D - B
+        depending on implementation.
       */
       graph = new Graph()
       'ABCD'.split('').forEach(graph.addVertex.bind(graph))
@@ -287,8 +290,8 @@ if (process.argv.indexOf('--test') !== -1) {
         const result = graph.dfTraverse('A')
         console.assert(Array.isArray(result), 'Expected result to be an array')
         console.assert(
-          graph.dfTraverse('A').join('') === 'ABCD',
-          'Expected A B C D (depth first order)'
+          graph.dfTraverse('A').join('') === 'ACDB',
+          `Expected A C D B but got ${result.join(' ')}`
         )
       }
 
