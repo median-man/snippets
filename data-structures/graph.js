@@ -36,8 +36,21 @@ class Graph {
       this._removeAdjacency(vertex, name)
     }
   }
-}
 
+  dfTraverse(startVertex) {
+    const result = []
+    const visited = {}
+    const traverse = vertex => {
+      visited[vertex] = true
+      result.push(vertex)
+      this.adjacencyList[vertex].forEach(neighbor => {
+        if (!visited[neighbor]) traverse(neighbor)
+      })
+    }
+    traverse(startVertex)
+    return result
+  }
+}
 /* 
   Run with --test argument to run tests
 */
@@ -64,6 +77,7 @@ if (process.argv.indexOf('--test') !== -1) {
   addEdgeTests()
   removeEdgeTests()
   removeVertexTests()
+  dfTraverseTests()
 
   function runTest(description, test) {
     try {
@@ -236,6 +250,57 @@ if (process.argv.indexOf('--test') !== -1) {
         vertexIsNotAdjacentTo(graph, 'Riker', 'Picard')
       }
       runTest(description, test)
+    }
+  }
+
+  function dfTraverseTests() {
+    let graph
+
+    console.log('dfTraverse')
+    shouldReturnDepthFirstArray()
+    console.log('')
+
+    function setup() {
+      /* 
+        Creates a graph arranged as follows:
+
+            A
+           / \
+          B — C — D
+        
+        A depth first traversal from A produces A - B - C - D.
+      */
+      graph = new Graph()
+      'ABCD'.split('').forEach(graph.addVertex.bind(graph))
+      'A-B, A-C, B-C, C-D'
+        .split(', ')
+        .map(edge => edge.split('-'))
+        .forEach(edge => graph.addEdge(...edge))
+    }
+
+    function shouldReturnDepthFirstArray() {
+      const description =
+        'should return array of all vertexes in depth first order'
+
+      const test = () => {
+        setup()
+        const result = graph.dfTraverse('A')
+        console.assert(Array.isArray(result), 'Expected result to be an array')
+        console.assert(
+          graph.dfTraverse('A').join('') === 'ABCD',
+          'Expected A B C D (depth first order)'
+        )
+      }
+
+      runTest(description, test)
+
+      function shallowEquals(a, b) {
+        if (a.length !== b.length) return false
+        for (let i = 0; i < a.length; i += 1) {
+          if (a[i] !== b[i]) return false
+        }
+        return true
+      }
     }
   }
 }
