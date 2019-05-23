@@ -116,6 +116,16 @@ if (process.argv.indexOf('--test') !== -1) {
     )
   }
 
+  function buildGraph(vertices, edges) {
+    const graph = new Graph()
+    vertices.split('').forEach(graph.addVertex.bind(graph))
+    edges
+      .split(', ')
+      .map(edge => edge.split('-'))
+      .forEach(edge => graph.addEdge(...edge))
+    return graph
+  }
+
   function addVertexTests() {
     console.log('addVertex')
 
@@ -247,6 +257,7 @@ if (process.argv.indexOf('--test') !== -1) {
       graph.addVertex('Picard')
       graph.addVertex('Riker')
       graph.addEdge('Picard', 'Riker')
+      // graph = buildGraph(new Graph(), )
     }
 
     function shouldRemoveTheVertex() {
@@ -274,37 +285,26 @@ if (process.argv.indexOf('--test') !== -1) {
   }
 
   function dfTraverseTests() {
-    let graph
-
     console.log('dfTraverse')
     shouldReturnDepthFirstArray()
     console.log('')
-
-    function setup() {
-      /* 
-        Creates a graph arranged as follows:
-
-            A
-           / \
-          B — C — D
-        
-        A depth first traversal from A produces A - B - C - D or A - C - D - B
-        depending on implementation.
-      */
-      graph = new Graph()
-      'ABCD'.split('').forEach(graph.addVertex.bind(graph))
-      'A-B, A-C, B-C, C-D'
-        .split(', ')
-        .map(edge => edge.split('-'))
-        .forEach(edge => graph.addEdge(...edge))
-    }
 
     function shouldReturnDepthFirstArray() {
       const description =
         'should return array of all vertexes in depth first order'
 
       const test = () => {
-        setup()
+        /* 
+          Creates a graph arranged as follows:
+
+              A
+            / \
+            B — C — D
+          
+          A depth first traversal from A produces A - B - C - D or A - C - D - B
+          depending on implementation.
+        */
+        const graph = buildGraph('ABCD', 'A-B, A-C, B-C, C-D')
         const result = graph.dfTraverse('A')
         console.assert(Array.isArray(result), 'Expected result to be an array')
         console.assert(
@@ -312,7 +312,6 @@ if (process.argv.indexOf('--test') !== -1) {
           `Expected A C D B but got ${result.join(' ')}`
         )
       }
-
       runTest(description, test)
     }
   }
@@ -335,12 +334,7 @@ if (process.argv.indexOf('--test') !== -1) {
           - A B E C D
           - A E B D C
       */
-      graph = new Graph()
-      'ABCDE'.split('').forEach(graph.addVertex.bind(graph))
-      'A-B, A-E, B-C, E-D'
-        .split(', ')
-        .map(edge => edge.split('-'))
-        .forEach(edge => graph.addEdge(...edge))
+      graph = buildGraph('ABCDE', 'A-B, A-E, B-C, E-D')
     }
 
     function shouldReturnAnArray() {
