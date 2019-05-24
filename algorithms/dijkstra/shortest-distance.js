@@ -50,4 +50,4 @@ const graph = new WeightedGraph()
 // console.dir(graph.adjacencyList, { colors: true })
 
 console.log(shortestPath(graph, 'A', 'E'))
-// => [ 'E', 'F', 'D', 'C', 'A' ]
+// => [ 'A', 'C', 'D', 'F', 'E' ]
