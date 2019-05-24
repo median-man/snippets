@@ -13,7 +13,7 @@ class PriorityQueue {
     return this.elements.shift()
   }
   _sort() {
-    return this.values.sort((a, b) => a.priority - b.priority)
+    return this.elements.sort((a, b) => a.priority - b.priority)
   }
 }
 

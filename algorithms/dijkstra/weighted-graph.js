@@ -13,6 +13,14 @@ class WeightedGraph {
     this.adjacencyList[v1].push(new Edge(v2, weight))
     this.adjacencyList[v2].push(new Edge(v1, weight))
   }
+
+  get vertices() {
+    return Object.keys(this.adjacencyList)
+  }
+
+  edgesOf(vertex) {
+    return this.adjacencyList[vertex]
+  }
 }
 
 class Vertex extends Array {}
